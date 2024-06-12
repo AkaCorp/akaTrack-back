@@ -1,16 +1,56 @@
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id    String     @id @default(uuid())
-  email String  @unique
-  fistname  String
-  lastname  String
-  password String
+model Users {
+  id            String          @id @default(uuid())
+  email         String          @unique
+  firstname      String
+  lastname      String
+  password      String
+  active        Boolean         @default(true)
+  UsersProjects UsersProjects[]
+}
+
+model Projects {
+  id            String          @id @default(uuid())
+  name          String          @unique
+  Repos         Repos[]
+  active        Boolean         @default(true)
+  UsersProjects UsersProjects[]
+}
+
+model UsersProjects {
+  id         String   @id @default(uuid())
+  user       Users    @relation(fields: [usersId], references: [id])
+  project    Projects @relation(fields: [projectsId], references: [id])
+  usersId    String
+  projectsId String
+}
+
+model Repos {
+  id         String   @id @default(uuid())
+  name       String
+  owner      String
+  repo       String
+  project    Projects @relation(fields: [projectsId], references: [id])
+  projectsId String
+  active     Boolean  @default(true)
+  Cards      Cards[]
+}
+
+model Cards {
+  id          String  @id @default(uuid())
+  title       String
+  description String
+  tag         String
+  status      String
+  repo        Repos   @relation(fields: [reposId], references: [id])
+  active      Boolean @default(true)
+  reposId     String
 }

@@ -1,21 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Users } from '@prisma/client';
 import prisma from 'src/db/prisma';
 
 @Injectable()
 export class UsersService {
-  getAll(): Promise<Partial<User>[]> {
-    return prisma.user.findMany();
+  getAll(): Promise<Partial<Users>[]> {
+    return prisma.users.findMany();
   }
 
-  findOne(email: string): Promise<User> {
-    return prisma.user.findUnique({
+  findOne(email: string): Promise<Users> {
+    return prisma.users.findUnique({
       select: {
         id: true,
         email: true,
-        fistname: true,
+        firstname: true,
         lastname: true,
         password: true,
+        active: true,
       },
       where: {
         email,
